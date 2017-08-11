@@ -1,0 +1,42 @@
+{% extends 'layout/employees.twig' %}
+
+{% block content %}
+
+<div class="row">
+	<div class="three columns"><b>Buscar por E-mail:</b></div>
+	<div class="six columns">
+		<input class="u-full-width" type="email" placeholder="test@mailbox.com" id="inputEmail" />
+	</div>
+	<div class="three columns">
+		<input class="button-primary u-full-width" type="button" value="BUSCAR" id="sendMail" />
+	</div>
+</div>
+
+<div class="row">
+	<div class="twelve columns">
+		<table class="u-full-width">
+			<thead>
+				<tr>
+					<th>Nombre</th>
+					<th>Correo</th>
+					<th>Posición</th>
+					<th>Salario</th>
+				</tr>
+			</thead>
+			<tbody>
+				{# itera la tabla usuarios del modelo #}
+				{% for employee in employees %}
+				<tr>
+					<td>{{ employee.name }}</td>
+					<td>{{ employee.email }}</td>
+					<td>{{ employee.position }}</td>
+					<td>{{ employee.salary }}</td>
+					{#<td><a href="{{ path_for('empleado.ver', {'id':employee.id}) }}">ver</a></td>#}
+					{#<td><a href="{{ path_for('empleado.eliminar', {'id':employee.id}) }}">eliminar</a><td>#}
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+{% endblock %}
