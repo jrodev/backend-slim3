@@ -10,7 +10,7 @@
     	<link href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" type="text/css" rel="stylesheet" />
 
     	{# la función base_url() le indica a twig que busque desde el directorio raíz de proyecto #}
-    	<link href="{{ base_url() }}/css/main.css" type="text/css" rel="stylesheet" />
+    	<link href="{{ baseUrl() }}css/main.css" type="text/css" rel="stylesheet" />
 	{% endblock %}
 
 </head>
@@ -30,7 +30,7 @@
 
     {% block scripts %}
     	{# Aqui incluimos los .js y otros scripts #}
-        <script> window.App = { baseUrl : "{{ base_url() }}" }; </script>
+        <script> window.App = { baseUrl : "{{ baseUrl() }}" }; </script>
         <script src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
     	<script src="{{ baseUrl() }}js/main.js"></script>
 	{% endblock %}

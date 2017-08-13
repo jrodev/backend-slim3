@@ -33,7 +33,7 @@ $container['view'] = function ($c) {
             "%s://%s%s",
             isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http',
             $_SERVER['HTTP_HOST'],
-            $all?$_SERVER['REQUEST_URI']:"/"
+            $all ? $_SERVER['REQUEST_URI'] : "/"
         );
         return $strBaseUrl;
     }));

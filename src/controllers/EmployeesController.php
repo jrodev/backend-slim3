@@ -33,21 +33,33 @@ class EmployeesController
      * @param  Array $arg  Contiene las variables que se pasan por url en la ruta
      * @return String renderiza usando Twig
      */
-    public function listar($req, $resp, $arg)
+    public function listar($req, $resp, $args)
     {
-        //var_dump($arg);
-        $hasQuery = (key_exists('column',$arg) && key_exists('value',$arg));
-        $aKeyVal = $hasQuery?[$arg['column'],$arg['value']]:[];
-        $result = $this->_getEmployeesEquals($aKeyVal);
-        /*echo sprintf(
-            "%s://%s%s",
-            isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http',
-            $_SERVER['HTTP_HOST'],
-            $_SERVER['REQUEST_URI']
-        );
-        exit;*/
-        return $this->view->render($resp, 'views/empleados/listar.twig', ['employees' => $result]);
-
+        //var_dump($args); exit;
+        $aKeyVal = [];
+        $aViewParams = [];
+        // SI es POST buscar
+        if ( $req->isPost() ) {
+            $aPost = $req->getParsedBody();
+            $hasEmail = key_exists('email', $aPost);
+            if($hasEmail) {
+                $aKeyVal = ['email', $aPost['email']];
+                $aViewParams['email'] = $aPost['email'];
+            }
+        }
+        // Si es busqueda por ID
+        if (key_exists('id', $args)) {
+            $aKeyVal = ['id', $args['id']];
+            $aViewParams['id'] = $args['id'];
+            $aResult = $this->_getEmployeesEquals($aKeyVal);
+            // asignando solo el empleado
+            if (count($aResult)) { $aViewParams['employee'] = $aResult[0]; }
+        } else {
+            // asignando todos los empledos
+            $aViewParams['employees'] = $this->_getEmployeesEquals($aKeyVal);
+        }
+        // SINO rederizando la vista
+        return $this->view->render($resp, 'views/empleados/listar.twig', $aViewParams);
     }
 
     /**
@@ -59,14 +71,12 @@ class EmployeesController
     {
         // All result
         $arrEmpl = $this->dataLoader->load('employees');
-
         // Si no se manda el array keyVal se devuelve todo
         if (count($aKeyVal)!=2) { return $arrEmpl; }
 
         $aResult = [];
-
-        $column = $aKeyVal[0];
-        $value  = $aKeyVal[1];
+        $column = trim($aKeyVal[0]);
+        $value  = trim($aKeyVal[1]);
 
         foreach ($arrEmpl as $index => $row) {
             if( key_exists($column, $row) && $row[$column]==$value ){
