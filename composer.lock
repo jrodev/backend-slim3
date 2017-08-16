@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "02400c8cc9939193c72488a6819c9bc1",
+    "content-hash": "aade199cc03d0db8b0081075740d3b24",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -523,6 +523,55 @@
                 "view"
             ],
             "time": "2017-01-25T20:38:39+00:00"
+        },
+        {
+            "name": "spatie/array-to-xml",
+            "version": "2.5.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/array-to-xml.git",
+                "reference": "ceff2641c6f700926bee759647811877f626e994"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/array-to-xml/zipball/ceff2641c6f700926bee759647811877f626e994",
+                "reference": "ceff2641c6f700926bee759647811877f626e994",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "0.9.*",
+                "phpunit/phpunit": "^5.7",
+                "spatie/phpunit-snapshot-assertions": "^0.4.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\ArrayToXml\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://murze.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Convert an array to xml",
+            "homepage": "https://github.com/spatie/array-to-xml",
+            "keywords": [
+                "array",
+                "convert",
+                "xml"
+            ],
+            "time": "2017-08-03T09:23:45+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",

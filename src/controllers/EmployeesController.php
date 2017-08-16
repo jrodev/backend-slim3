@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use Libs\DataLoader;
+use Spatie\ArrayToXml\ArrayToXml;
 
 /**
  * Acciones para el Controlador Empleados
@@ -62,6 +63,22 @@ class EmployeesController
         return $this->view->render($resp, 'views/empleados/listar.twig', $aViewParams);
     }
 
+    public function listarXML($req, $resp, $args)
+    {
+        //var_dump($args);
+        $aArgs = [];
+        $aArgs[] = key_exists('min', $args)?$args['min']:0;
+        $aArgs[] = key_exists('max', $args)?$args['max']:0;
+        $res = $this->_getEmployeesBySalary($aArgs);
+        //var_dump($res);exit;
+
+        $result = ArrayToXml::convert($res);
+
+        $resp->write($result);
+        $resp = $resp->withHeader('Content-Type', 'application/xml; charset=utf-8');
+        return $resp;
+    }
+
     /**
      * Metodo privado que retorna un json como array segun criterio de busqueda
      * @param  array  $aKeyVal de la forma: ['column','value']
@@ -84,6 +101,51 @@ class EmployeesController
             }
         }
         return $aResult;
+    }
+
+    private function _getEmployeesBySalary($aArgs=[])
+    {
+        // All result
+        $arrEmpl = $this->dataLoader->load('employees');
+        // cantidad de elementos en $aArgs
+        $lenArg = count($aArgs);
+        // Si no se manda el array keyVal se devuelve todo
+        if (!$lenArg) { return $arrEmpl; }
+
+        $aResult = ['employee'=>[]];
+        $min  = ($lenArg>=1)?((int)trim($aArgs[0])):0;
+        $max  = ($lenArg==2)?((int)trim($aArgs[1])):0;
+        $num  = 0;
+        foreach ($arrEmpl as $index => $row) {
+
+            if ( key_exists('salary', $row) ) {
+                // preg_match('/\$(\d*),?(\d*)\.?(\d*)/', '$187,89.980', $matches, 0);
+                // Array ( [0] => $187,89.980 [1] => 187 [2] => 89 [3] => 980 )
+                preg_match('/\$(\d*),?(\d*)\.?(\d*)/', trim($row['salary']), $aSalary, 0);
+                $dSalary = (float)($aSalary[1].$aSalary[2].'.'.$aSalary[3]);
+
+                $bGt = ($min!==0)?($min<$dSalary):TRUE; // mayor que
+                $bLt = ($max!==0)?($dSalary<$max):TRUE; // menor que
+                //var_dump($min,$max,$aSalary, $dSalary, $bGt, $bLt); echo "<br>";
+                if ($bGt && $bLt) { $aResult['employee'][] = $row; }
+            }
+        }
+        return $aResult;
+    }
+
+    private function _arrayToXML($data, &$xmlData)
+    {
+        foreach( $data as $key => $value ) {
+            if( is_numeric($key) ){
+                $key = 'item'.$key; //dealing with <0/>..<n/> issues
+            }
+            if( is_array($value) ) {
+                $subNode = $xmlData->addChild($key);
+                $this->_arrayToXML($value, $subNode);
+            } else {
+                $xmlData->addChild("$key",htmlspecialchars("$value"));
+            }
+         }
     }
 
 }
