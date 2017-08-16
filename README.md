@@ -2,6 +2,7 @@
 
 To run the application in development, you can also run this command.
 
+    php composer.phar install
 	php composer.phar start
 
 Run this command to run the test suite
